@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, Link } from '@reach/router';
 import data from './data.js';
-import { link } from 'fs';
+import dayjs from 'dayjs';
 
 function App() {
 	return (
@@ -40,7 +40,7 @@ const Artist = ({ slug }) => {
 };
 
 const SetList = ({ id }) => {
-	const events = data.events.filter((e) => e.hosts.indexOf(id) >= 0);
+	const events = data.events.filter((e) => e.artist === id);
 	return (
 		<div>
 			{events.map((e) => (
@@ -51,7 +51,16 @@ const SetList = ({ id }) => {
 };
 
 const SetItem = ({ event }) => {
-	return <div>{data.locations[event.location].title}</div>;
+	return (
+		<div>
+			<div>{data.locations[event.location].title}</div>
+			<div>
+				{dayjs(event.time[0]).format('h:mma') +
+					' - ' +
+					dayjs(event.time[1]).format('h:mma')}
+			</div>
+		</div>
+	);
 };
 
 const ArtistList = () => (
