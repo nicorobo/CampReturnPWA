@@ -1,7 +1,9 @@
 import React from 'react';
 import { Router, Link } from '@reach/router';
+import moment from 'moment';
+import Timeline from 'react-calendar-timeline';
+import 'react-calendar-timeline/lib/Timeline.css';
 import data from './data.js';
-import dayjs from 'dayjs';
 
 function App() {
 	return (
@@ -9,10 +11,31 @@ function App() {
 			<Router>
 				<Artists path="artists" />
 				<Artist path="artists/:slug" />
+				<Schedule path="schedule" />
 			</Router>
 		</div>
 	);
 }
+
+const Schedule = () => {
+	// const groups= data.locations.map(l => ({...l, }))
+	const items = data.events.map((e) => ({
+		...e,
+		group: e.location,
+		start_time: moment(e.time[0]),
+		end_time: moment(e.time[1]),
+		title: data.artists[e.artist].title,
+	}));
+	console.log(items);
+	return (
+		<Timeline
+			groups={data.locations}
+			items={items}
+			defaultTimeStart={moment('2019-06-07T12:00-05:00')}
+			defaultTimeEnd={moment('2019-06-09T12:00-05:00')}
+		/>
+	);
+};
 
 const Artists = () => (
 	<div className="artists">
@@ -55,9 +78,9 @@ const SetItem = ({ event }) => {
 		<div>
 			<div>{data.locations[event.location].title}</div>
 			<div>
-				{dayjs(event.time[0]).format('h:mma') +
+				{moment(event.time[0]).format('h:mma') +
 					' - ' +
-					dayjs(event.time[1]).format('h:mma')}
+					moment(event.time[1]).format('h:mma')}
 			</div>
 		</div>
 	);
