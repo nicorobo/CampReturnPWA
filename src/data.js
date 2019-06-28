@@ -2,8 +2,8 @@ const data = {
 	artists: [
 		{
 			id: 0,
-			slug: 'notmysnakehead',
-			title: 'notmysnakehead',
+			slug: 'nick-roberts',
+			title: 'Nick Roberts',
 			bio:
 				"Nick has been tickling guitar strings since age seven, but was introduced to the terrifying magic of electronic music in 2016. That party in the desert addicted him to exploring all sounds ancient and all grooves new. Come prepared to get down stay down, or at least jiggle gently, to the funky sounds of our deserts, jungles, and islands. When he's not laying it down fat behind the decks, you'll find him shuffling jiffy pop near the fire. ",
 			photo:

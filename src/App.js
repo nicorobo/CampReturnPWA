@@ -1,8 +1,14 @@
 import React from 'react';
 import { Router, Link } from '@reach/router';
 import moment from 'moment';
-import Timeline from 'react-calendar-timeline';
-import 'react-calendar-timeline/lib/Timeline.css';
+import Timeline, {
+	TimelineHeaders,
+	SidebarHeader,
+	DateHeader,
+	TimelineMarkers,
+	TodayMarker,
+} from 'react-calendar-timeline';
+import './timeline.css';
 import data from './data.js';
 
 function App() {
@@ -26,14 +32,47 @@ const Schedule = () => {
 		end_time: moment(e.time[1]),
 		title: data.artists[e.artist].title,
 	}));
-	console.log(items);
+	const minTime = moment('2019-06-07T12:00-05:00');
+	const maxTime = moment('2019-06-09T12:00-05:00');
+
+	function onTimeChange(visibleTimeStart, visibleTimeEnd, updateScrollCanvas) {
+		if (visibleTimeStart < minTime && visibleTimeEnd > maxTime) {
+			updateScrollCanvas(minTime, maxTime);
+		} else if (visibleTimeStart < minTime) {
+			updateScrollCanvas(minTime, minTime + (visibleTimeEnd - visibleTimeStart));
+		} else if (visibleTimeEnd > maxTime) {
+			updateScrollCanvas(maxTime - (visibleTimeEnd - visibleTimeStart), maxTime);
+		} else {
+			updateScrollCanvas(visibleTimeStart, visibleTimeEnd);
+		}
+	}
+	const currentTime = moment()
+		.add(-1.5, 'hours')
+		.valueOf();
 	return (
 		<Timeline
 			groups={data.locations}
 			items={items}
-			defaultTimeStart={moment('2019-06-07T12:00-05:00')}
-			defaultTimeEnd={moment('2019-06-09T12:00-05:00')}
-		/>
+			defaultTimeStart={moment('2019-06-08T12:00-05:00')
+				.add(-1.5, 'hours')
+				.valueOf()}
+			defaultTimeEnd={moment('2019-06-08T12:00-05:00')
+				.add(1.5, 'hours')
+				.valueOf()}
+			canMove={false}
+			lineHeight={50}
+			onTimeChange={onTimeChange}
+			maxZoom={60 * 60 * 1000 * 3}
+			minZoom={60 * 60 * 1000 * 3}
+			itemHeightRatio={0.8}>
+			<TimelineMarkers>
+				<TodayMarker interval={1000 * 60} />
+			</TimelineMarkers>
+			<TimelineHeaders>
+				<DateHeader unit="primaryHeader" />
+				<DateHeader />
+			</TimelineHeaders>
+		</Timeline>
 	);
 };
 
