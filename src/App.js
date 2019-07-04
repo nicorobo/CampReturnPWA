@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Link } from '@reach/router';
+import { Router, Link, navigate } from '@reach/router';
 import moment from 'moment';
 import Timeline, {
 	TimelineHeaders,
@@ -46,6 +46,11 @@ const Schedule = () => {
 			updateScrollCanvas(visibleTimeStart, visibleTimeEnd);
 		}
 	}
+	function onItemSelect(id, e, time) {
+		const event = data.events.find((e) => e.id === id);
+		const slug = data.artists.find((a) => a.id === event.artist).slug;
+		navigate('/artists/' + slug);
+	}
 	const currentTime = moment()
 		.add(-1.5, 'hours')
 		.valueOf();
@@ -62,6 +67,7 @@ const Schedule = () => {
 			canMove={false}
 			lineHeight={50}
 			onTimeChange={onTimeChange}
+			onItemSelect={onItemSelect}
 			maxZoom={60 * 60 * 1000 * 3}
 			minZoom={60 * 60 * 1000 * 3}
 			itemHeightRatio={0.8}>
@@ -70,7 +76,7 @@ const Schedule = () => {
 			</TimelineMarkers>
 			<TimelineHeaders>
 				<DateHeader unit="primaryHeader" />
-				<DateHeader />
+				<DateHeader labelFormat="h:mma" />
 			</TimelineHeaders>
 		</Timeline>
 	);
